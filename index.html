@@ -1,0 +1,273 @@
+﻿<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" data-ng-app="app">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Sample Address Book">
+	<meta name="author" content="Dragos COJOCARU">
+	<title>Address Book</title>
+	<script>
+		/* loadCSS: load a CSS file asynchronously. [c]2015 scottjehl, Filament Group, Inc.Licensed MIT */
+		(function (w)
+		{
+			"use strict";
+			/* exported loadCSS */
+			w.loadCSS = function (href, before, media)
+			{
+				// Arguments explained:
+				// `href` [REQUIRED] is the URL for your CSS file.
+				// `before` [OPTIONAL] is the element the script should use as a reference for injecting our stylesheet <link> before
+				// By default, loadCSS attempts to inject the link after the last stylesheet or script in the DOM. However, you might desire a more specific location in your document.
+				// `media` [OPTIONAL] is the media type or query of the stylesheet. By default it will be 'all'
+				var ss = w.document.createElement("link");
+				var ref;
+				if (before)
+				{
+					ref = before;
+				}
+				else if (w.document.querySelectorAll)
+				{
+					var refs = w.document.querySelectorAll("style,link[rel=stylesheet],script");
+					// No need to check length. This script has a parent element, at least
+					ref = refs[refs.length - 1];
+				}
+				else
+				{
+					ref = w.document.getElementsByTagName("script")[0];
+				}
+
+				var sheets = w.document.styleSheets;
+				ss.rel = "stylesheet";
+				ss.href = href;
+				// temporarily set media to something inapplicable to ensure it'll fetch without blocking render
+				ss.media = "only x";
+
+				// Inject link
+				// Note: the ternary preserves the existing behavior of "before" argument, but we could choose to change the argument to "after" in a later release and standardize on ref.nextSibling for all refs
+				// Note: `insertBefore` is used instead of `appendChild`, for safety re: http://www.paulirish.com/2011/surefire-dom-element-insertion/
+				ref.parentNode.insertBefore(ss, (before ? ref : ref.nextSibling));
+				// A method (exposed on return object for external use) that mimics onload by polling until document.styleSheets until it includes the new sheet.
+				ss.onloadcssdefined = function (cb)
+				{
+					var defined;
+					for (var i = 0; i < sheets.length; i++)
+					{
+						if (sheets[i].href && sheets[i].href === ss.href)
+						{
+							defined = true;
+						}
+					}
+					if (defined)
+					{
+						cb();
+					} else
+					{
+						setTimeout(function ()
+						{
+							ss.onloadcssdefined(cb);
+						});
+					}
+				};
+
+				// once loaded, set link's media back to `all` so that the stylesheet applies once it loads
+				ss.onloadcssdefined(function ()
+				{
+					ss.media = media || "all";
+				});
+				return ss;
+			};
+		}(this));
+
+		// load the CSS file(s)
+		loadCSS("http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css");
+		loadCSS("public/css/styles.min.css");
+		loadCSS("public/css/font-awesome.min.css");
+	</script>
+	<noscript>
+		<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/public/css/styles.min.css" rel="stylesheet">
+		<link href="/public/css/font-awesome.min.css" rel="stylesheet">
+	</noscript>
+</head>
+<body data-ng-controller="AgendaController as vm">
+
+	<nav class="navbar navbar-static-top">
+		<h1 class="title text-center">Address Book
+			<span>made with AngularJS</span>
+		</h1>
+	</nav>
+
+	<script type="text/ng-template" id="contactEditor.html">
+			<div class="modal-header">
+				<h3 class="modal-title">
+					<span data-ng-if="vm.currentContact.id == 0">Add contact</span>
+					<span data-ng-if="vm.currentContact.id != 0">Edit contact</span>
+				</h3>
+			</div>
+			<div class="modal-body">
+				<form name="contactForm" novalidate>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group" data-ng-class="{ 'has-error' : contactForm.firstName.$invalid && contactForm.firstName.$touched }">
+								<label for="firstName">
+									First name:
+									<input type="text" class="form-control" name="firstName" id="firstName" data-ng-model="vm.currentContact.firstName" required >
+								</label>
+								<p data-ng-show="contactForm.firstName.$invalid && contactForm.firstName.$touched" class="help-block">The "First name" is required</p>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group" data-ng-class="{ 'has-error' : contactForm.lastName.$invalid && contactForm.lastName.$touched }">
+								<label for="lastName">
+									Last name:
+									<input type="text" class="form-control" name="lastName" id="lastName" data-ng-model="vm.currentContact.lastName" required >
+								</label>
+								<p data-ng-show="contactForm.lastName.$invalid && contactForm.lastName.$touched" class="help-block">The "Last name" is required</p>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group" data-ng-class="{ 'has-error' : contactForm.email.$invalid && contactForm.email.$touched || contactForm.email.$invalid && contactForm.email.$dirty }">
+								<label for="email">
+									Email address:
+									<input type="email" class="form-control" name="email" id="email" data-ng-model="vm.currentContact.email" required >
+								</label>
+								<p data-ng-show="contactForm.email.$invalid && contactForm.email.$touched && contactForm.email.$pristine" class="help-block">The "Email" is required</p>
+								<p data-ng-show="contactForm.email.$invalid && contactForm.email.$dirty" class="help-block">The "Email" is invalid</p>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<label for="address">
+									Address:
+									<textarea class="form-control" rows="3" name="address" id="address" data-ng-model="vm.currentContact.address"></textarea>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="city">
+									City:
+									<input type="text" class="form-control" name="city" id="city" data-ng-model="vm.currentContact.city">
+								</label>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="zipCode">
+									Zip code:
+									<input type="text" class="form-control" name="zipCode" id="zipCode" data-ng-model="vm.currentContact.zipCode" data-ng-pattern="/^\d{5}$/">
+								</label>
+								<p data-ng-show="contactForm.zipCode.$invalid && contactForm.zipCode.$dirty" class="help-block">The "Zip code" is invalid</p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="country">
+									Country:
+									<select class="form-control" name="country" id="country" data-ng-options="item.name for item in vm.countries track by item.code" data-ng-model="vm.currentContact.country"></select>
+								</label>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" data-ng-click="vm.ok()" data-ng-disabled="contactForm.$invalid">Save</button>
+				<button type="button" class="btn btn-default" data-ng-click="vm.cancel()">Cancel</button>
+			</div>
+	</script>
+
+	<script type="text/ng-template" id="contactRemoveDialog.html">
+			<div class="btn-group btn-group-justified" role="group">
+				<a href="javascript:void(0)" class="btn btn-xs btn-danger" data-ng-click="vm.removeContact($index)">
+					Yes
+				</a>
+				<a href="javascript:void(0)" class="btn btn-xs btn-default">
+					No
+				</a>
+			</div>
+	</script>
+	
+	<uib-alert ng-show="vm.alert" type="{{ vm.alert.type }}" dismiss-on-timeout="3000" close="vm.alert = undefined">{{ vm.alert.message }}</uib-alert>
+
+	<div class="container">
+		<div class="row contacts-options">
+			<div class="col-md-6">
+				<button class="btn btn-default" data-ng-click="vm.addContact()">
+					<span class="fa fa-user-plus"></span> Add a new contact
+				</button>
+			</div>
+			<div class="col-xs-4">
+				<div class="input-group input-group-sm" role="group" data-ng-show="vm.contacts.length > 0">
+					<span class="input-group-addon">
+						<span class="fa fa-filter"></span>
+					</span>
+					<input type="text" name="search" data-ng-model="vm.search" class="form-control" placeholder="Search contacts..." />
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="btn-group btn-group-sm" role="group" data-ng-show="vm.contacts.length > 0">
+					<button type="button" class="btn btn-default" data-ng-model="vm.displayMode" uib-btn-radio="'cards'">
+						<span class="fa fa-th"></span>
+					</button>
+					<button type="button" class="btn btn-default" data-ng-model="vm.displayMode" uib-btn-radio="'list'">
+						<span class="fa fa-th-list"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		
+		<hr />
+
+
+		<ul class="contacts contacts-{{ vm.displayMode }}">
+			<li class="contact" data-ng-repeat="contact in vm.contacts | startFrom: (vm.currentPage - 1) * vm.pageSize | limitTo: vm.pageSize | filter: vm.search | orderBy: ['firstName','lastName']">
+				<p class="name">{{ contact.firstName + ' ' + contact.lastName }}</p>
+				<a href="mailto:{{ contact.email }}" class="email"><span class="fa fa-envelope-o"></span>{{ contact.email }}</a>
+				<p class="address">{{ vm.fullAddress(contact) }}</p>
+				<a href="javascript:void(0)" class="btn-edit text-center" data-ng-click="vm.editContact($index)">
+					<span class="fa fa-pencil"></span>Edit
+				</a>
+				<a href="javascript:void(0)" class="btn-remove" data-popover-placement="top" data-uib-popover-template="'contactRemoveDialog.html'" data-popover-title="Remove this contact?" data-popover-trigger="focus" data-popover-append-to-body="true"></a>
+			</li>
+		</ul>
+
+		<div class="text-center" data-ng-show="(vm.contacts | filter: vm.search).length">
+			<uib-pagination total-items="(vm.contacts | filter: vm.search).length" ng-model="vm.currentPage" max-size="5" items-per-page="vm.pageSize" boundary-links="true" rotate="false"></uib-pagination>
+		</div>
+	
+		<div class="well" data-ng-if="vm.contacts.length == 0">
+			<h4 class="text-muted">Seems like the address book is emtpy. You can use the "Add a new contact" button above or 
+			<a href="javascript:void(0)" data-ng-click="vm.seed()">seed the contact list with random data</a>.	
+			</h4>
+		</div>	
+	
+	</div>
+
+	<footer>
+		<div class="container">
+			<p class="text-muted small">Copyright 2015 - Dragos COJOCARU</p>
+		</div>
+	</footer>
+
+	<script src="public/js/lib/angular.min.js"></script>
+	<script src="public/js/lib/ui-bootstrap-custom-tpls-0.14.3.min.js"></script>
+	<script src="public/js/lib/angular-animate.min.js"></script>
+	<script src="public/js/app/main.js"></script>
+	<script src="public/js/app/controllers.js"></script>
+	<script src="public/js/app/filters.js"></script>
+
+</body>
+</html>

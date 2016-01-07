@@ -1,0 +1,459 @@
+﻿@import (reference) "variables.less";
+
+@footer-height: 50px;
+@remove-button-size: 48px;
+@card-spacing: 10px;
+
+html
+{
+	position: relative;
+	min-height: 100%;
+}
+
+body
+{
+	font-family: Verdana;
+	background-color: #F3F3F3;
+	margin-bottom: @footer-height;
+	/*#region footer */
+	& > footer
+	{
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		height: @footer-height;
+		background-color: #31475C;
+
+		& .text-muted
+		{
+			color: #F9B72B;
+			margin: @footer-height/3 0;
+		}
+	}
+	/*#endregion */
+}
+
+/*#region header */
+.navbar-static-top
+{
+	margin-bottom: @footer-height/3;
+	height: 100px;
+	background-color: #31475C;
+}
+
+.title
+{
+	font-weight: bold;
+	font-size: 3em;
+	color: #FFF;
+	text-shadow: 1px 1px 1px fade(#000, 60);
+
+	& span
+	{
+		display: block;
+		margin-right: -20%;
+		color: #F9B72B;
+		font-size: 8pt;
+		font-weight: normal;
+		text-shadow: none;
+	}
+}
+/*#endregion */
+
+/*#region contacts */
+
+.contacts-options
+{
+	padding: 0 5px 0 0;
+}
+
+.contacts
+{
+	display: block;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+
+	&-cards
+	{
+		& li
+		{
+			position: relative;
+			display: inline-block;
+			width: 30%;
+			height: 150px;
+			vertical-align: top;
+			margin: 0 @card-spacing @card-spacing 0px;
+			padding: @card-spacing;
+			background-color: #FFFFFF;
+			border: 1px solid #FFF;
+			overflow: hidden;
+			.box-shadow(1px 1px 1px 0 fade(#000, 5));
+			.border-radius(3px);
+
+			&.add
+			{
+				position: relative;
+				margin-right: 6px;
+				border-color: #64788C;
+				vertical-align: middle;
+				text-align: center;
+				cursor: pointer;
+
+				& .fa
+				{
+					font-weight: bold;
+					font-size: 7em;
+					padding: .15em 0 0 0;
+					color: #44586B;
+					border: none;
+					.transition();
+				}
+
+				&:hover
+				{
+					& .fa
+					{
+						color: #9BC035;
+					}
+
+					border-color: #8FB033;
+				}
+			}
+
+			& .btn-edit
+			{
+				display: block;
+				background-color: #FDA622;
+				border-color: #F99F1A;
+				color: #FFF;
+				position: absolute;
+				bottom: @card-spacing / 2;
+				right: 40%;
+				left: 40%;
+				margin-bottom: -5%;
+				padding: 2px 6px;
+				.border-radius(3px);
+				text-shadow: 1px 1px 1px fade(#000, 15);
+				font-size: .9em;
+				.transition();
+				opacity: 0;
+				visibility: hidden;
+
+				&:active, &:focus
+				{
+					outline: none;
+				}
+
+				&:hover, &:active, &:focus
+				{
+					text-decoration: none;
+				}
+			}
+
+			& .btn-remove
+			{
+				position: absolute;
+				right: -@remove-button-size/2;
+				top: -@remove-button-size/2;
+				width: @remove-button-size;
+				height: @remove-button-size;
+				.border-radius(100%);
+				background-color: #BDB3B0;
+				border: 1px solid #fff;
+				.box-shadow(0px 1px 2px fade(#000, 15));
+				.transition();
+
+				&:focus, &:active
+				{
+					outline: none;
+				}
+
+				&:after
+				{
+					position: absolute;
+					top: @remove-button-size/2 - 2;
+					left: @remove-button-size/4 - 3;
+					content: "×";
+					color: #FFF;
+					text-shadow: 1px 1px 1px fade(#000, 15);
+					.transition();
+				}
+			}
+
+			& .name
+			{
+				display: block;
+				border-bottom: 1px solid #F3F3F3;
+				font-size: 1.2em;
+				font-weight: bold;
+				padding: 0px 0 8px;
+			}
+
+			& .email
+			{
+				color: #6CB4D9;
+				text-decoration: none;
+			}
+
+			.address
+			{
+				color: #5E5E5E;
+				font-size: .9em;
+			}
+
+			&:hover
+			{
+				.box-shadow(1px 1px 4px 0 fade(#000, 20));
+
+				& .btn-remove
+				{
+					background-color: #E3573E;
+				}
+
+				& .btn-edit
+				{
+					opacity: 1;
+					visibility: visible;
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+
+	&-list
+	{
+		& li
+		{
+			display: block;
+			width: auto;
+			position: relative;
+			padding: @card-spacing / 2;
+			margin-bottom: @card-spacing / 2;
+			background-color: #FFFFFF;
+			border: 1px solid #FFF;
+			overflow: hidden;
+			.box-shadow(1px 1px 1px 0 fade(#000, 5));
+			.border-radius(3px);
+
+			& .btn-edit
+			{
+				display: inline-block;
+				background-color: #FDA622;
+				border-color: #F99F1A;
+				color: #FFF;
+				position: relative;
+				margin-left: -1%;
+				padding: 2px 6px;
+				.border-radius(3px);
+				text-shadow: 1px 1px 1px fade(#000, 15);
+				font-size: .9em;
+				.transition();
+				opacity: 0;
+				visibility: hidden;
+
+				&:active, &:focus
+				{
+					outline: none;
+				}
+
+				&:hover, &:active, &:focus
+				{
+					text-decoration: none;
+				}
+			}
+
+			& .btn-remove
+			{
+				position: absolute;
+				right: -@remove-button-size/2;
+				top: -@remove-button-size/2;
+				width: @remove-button-size;
+				height: @remove-button-size;
+				.border-radius(100%);
+				background-color: #BDB3B0;
+				border: 1px solid #fff;
+				.box-shadow(0px 1px 2px fade(#000, 15));
+				.transition();
+
+				&:focus, &:active
+				{
+					outline: none;
+				}
+
+				&:after
+				{
+					position: absolute;
+					top: @remove-button-size/2 - 2;
+					left: @remove-button-size/4 - 3;
+					content: "×";
+					color: #FFF;
+					text-shadow: 1px 1px 1px fade(#000, 15);
+					.transition();
+				}
+			}
+
+			& .name
+			{
+				display: inline-block;
+				font-weight: bold;
+				margin: 0;
+				padding: 0;
+			}
+
+			& .email
+			{
+			}
+
+			& .address
+			{
+				display: none;
+			}
+
+			&:hover
+			{
+				.box-shadow(1px 1px 4px 0 fade(#000, 20));
+
+				& .btn-remove
+				{
+					background-color: #E3573E;
+				}
+
+				& .btn-edit
+				{
+					opacity: 1;
+					visibility: visible;
+					margin-left: 0;
+				}
+			}
+		}
+	}
+}
+
+/*#endregion */
+
+.messages
+{
+}
+
+.pagination .active a
+{
+	background-color: #6CB4D9;
+	border-color: #6CB4D9;
+}
+
+.fa
+{
+	margin-right: 4px;
+}
+
+.modal-header
+{
+	background-color: #e5e5e5;
+	border-radius: 5px 5px 0 0;
+	border-bottom-color: #DADADA;
+}
+
+.nav, .pagination, .carousel, .panel-title a
+{
+	cursor: pointer;
+}
+
+textarea
+{
+	-moz-resize: vertical;
+	-ms-resize: vertical;
+	-o-resize: vertical;
+	resize: vertical;
+}
+
+.form-group label
+{
+	display: block;
+	background-color: #fff;
+	border: 1px solid #E5E8EB;
+	padding: 5px;
+	font-size: .8em;
+	font-weight: normal;
+	color: #888;
+}
+
+	.form-group label input, .form-group label select, .form-group textarea
+	{
+		border: none;
+		border-bottom: 2px solid transparent;
+		.border-radius(0);
+		padding: 0;
+		margin: 0;
+		font-size: 1.3em;
+		height: auto;
+		font-weight: bold;
+		color: #000;
+	}
+
+		.form-group label input, .form-group label select, .form-group textarea,
+		.form-group label input:active, .form-group label select:active, .form-group textarea:active,
+		.form-group label input:focus, .form-group label select:focus, .form-group textarea:focus
+		{
+			.box-shadow(none);
+		}
+
+			.form-group label input:active, .form-group label select:active, .form-group textarea:active,
+			.form-group label input:focus, .form-group label select:focus, .form-group textarea:focus
+			{
+				border-bottom-color: #1AB394;
+			}
+
+.has-error label input, .has-error label select, .has-error label textarea
+{
+	border-bottom-color: transparent !important;
+}
+
+	.has-error label input:active, .has-error label select:active, .has-error label textarea:active
+	{
+		border-bottom-color: #1AB394 !important;
+	}
+
+	.has-error label input, .has-error label select, .has-error label textarea,
+	.has-error label input:active, .has-error label select:active, .has-error label textarea:active,
+	.has-error label input:focus, .has-error label select:focus, .has-error label textarea:focus
+	{
+		.box-shadow(none) !important;
+	}
+
+.has-error .help-block
+{
+	font-size: .8em;
+	padding-left: 12px;
+	position: relative;
+	color: #ED5565;
+}
+
+	.has-error .help-block:before
+	{
+		position: absolute;
+		left: 0;
+		display: block;
+		content: "\f071";
+		font-family: "FontAwesome";
+	}
+
+.short-address
+{
+	white-space: nowrap;
+	max-width: 200px;
+	overflow: hidden;
+	-o-text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+}
+
+input[name="firstName"]:first-letter
+{
+	text-transform: uppercase;
+}
+
+input[name="lastName"]
+{
+	text-transform: uppercase;
+}
